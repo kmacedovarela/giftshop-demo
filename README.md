@@ -21,6 +21,34 @@ To test this project its necessary to start jBPM, import business project, deplo
 
 *For now, this file describes a local install without OpenShift*
 
+# MySQL
+
+1. Start Docker Container
+
+~~~
+docker run --rm --name mysql-jbpm -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=mydb -e MYSQL_USER=jbpmuser -e MYSQL_PASSWORD=jbpmpassword -p 3306:3306  -v $HOME/docker/opt/db/mysql:/var/lib/mysql -d mysql:5.7
+~~~
+
+1. Configure EAP:
+
+~~~
+                <datasource jndi-name="java:jboss/MySqlDS" pool-name="MySqlDS" enabled="true">
+                    <connection-url>jdbc:mysql://localhost:3306/mydb</connection-url>
+                    <driver-class>com.mysql.jdbc.Driver</driver-class>
+                    <driver>mysql-connector-java-5.1.48.jar_com.mysql.jdbc.Driver_5_1</driver>
+                    <security>
+                        <user-name>jbpmuser</user-name>
+                        <password>jbpmpassword</password>
+                    </security>
+                    <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker"/>
+                        <background-validation>true</background-validation>
+                        <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter"/>
+                    </validation>
+                </datasource>
+~~~
+
+
 ## RHPAM 
 
 1. Start RHPAM with this ( _non recomended for prod_ ) property.
@@ -65,10 +93,17 @@ Start a simulation on your dialogflow console and enjoy sending gifts to your fr
 
 ![Image of Google Assistant](https://github.com/kmacedovarela/giftshop-demo/blob/master/images/google-actions.png)
 
-Google assistant started a new process via the Node JS client available on firebase. The NodeJS client executed a rest call to Kie Server with the input collected from the user. 
+Google assistant started a new process via the Node JS client available on firebase. The NodeJS client executed a rest call to Kie Server with the input collected from the user. A new Order process will be started.
 
-![Image of Decision Table](https://github.com/kmacedovarela/giftshop-demo/blob/master/images/decision-table.png)
+![Image of Business Process](https://github.com/kmacedovarela/gift-shop/blob/master/images/business-process.png)
 
 The price and value informed to the customer, were calculated dinamicaly by business rules defined in decision tables.
 
-![Image of Business Process](https://github.com/kmacedovarela/jbpm-demo-pizzapizza/blob/master/images/business-process.png)
+![Image of Decision Table](https://github.com/kmacedovarela/giftshop-demo/blob/master/images/decision-table.png)
+
+The human tasks have forms which can be obtained and embedded in external apps
+
+![Image of Human Task Form](https://github.com/kmacedovarela/giftshop-demo/blob/master/images/task-form.png)
+
+Change the value of a business rule, click on deploy in Business Central, and try to order the same Gift using Google Actions. The new rule will be imediatelly used. 
+
