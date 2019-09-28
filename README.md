@@ -12,6 +12,7 @@ Google Assistant informs the customer of the total price which consists of the i
 ## Pre-reqs
 - Java 8
 - MySQL
+- NGrok
 - [RHPAM 7.4.0](https://developers.redhat.com/products/rhpam/download)
 - Firebase console (with subscription that allows requests to external environments)
 
