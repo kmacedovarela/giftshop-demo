@@ -95,7 +95,7 @@ Start a simulation on your dialogflow console and enjoy sending gifts to your fr
 
 Google assistant started a new process via the Node JS client available on firebase. The NodeJS client executed a rest call to Kie Server with the input collected from the user. A new Order process will be started.
 
-![Image of Business Process](https://github.com/kmacedovarela/gift-shop/blob/master/images/business-process.png)
+![Image of Business Process](https://github.com/kmacedovarela/giftshop-demo/blob/master/images/business-process.png)
 
 The price and value informed to the customer, were calculated dinamicaly by business rules defined in decision tables.
 
