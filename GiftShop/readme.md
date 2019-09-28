@@ -1,4 +1,1 @@
-Repository Init Content
-=======================
-
-Your project description here.
+Project to be imported in business central
