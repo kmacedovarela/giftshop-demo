@@ -13,7 +13,7 @@ Google Assistant informs the customer of the total price which consists of the i
 - Java 8
 - MySQL
 - NGrok
-- [RHPAM 7.4.0](https://developers.redhat.com/products/rhpam/download)
+- [jBPM  7.29.0](http://jbpm.org)
 - Firebase console (with subscription that allows requests to external environments)
 
 ## Installation
@@ -32,6 +32,8 @@ docker run --rm --name mysql-jbpm -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE
 
 1. Configure EAP:
 
+1.1. Datasource:
+
 ~~~
                 <datasource jndi-name="java:jboss/MySqlDS" pool-name="MySqlDS" enabled="true">
                     <connection-url>jdbc:mysql://localhost:3306/mydb</connection-url>
@@ -49,6 +51,36 @@ docker run --rm --name mysql-jbpm -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE
                 </datasource>
 ~~~
 
+1.2. SMTP (change the email and password on the instructions below)
+
+~~~
+○ → $PATH_TO/jbpm-server-7.29.0.Final-dist/bin/jboss-cli.sh -c
+[standalone@localhost:9990 /] /socket-binding-group=standard-sockets/remote-destination-outbound-socket-binding=jbpm-mail-smtp/:add(host=smtp.gmail.com, port=465)
+{
+    "outcome" => "success",
+    "response-headers" => {"process-state" => "reload-required"}
+}
+[standalone@localhost:9990 /] /subsystem=mail/mail-session=jbpm/:add(jndi-name=java:/jbpmMailSession, from=EMAILHERE@gmail.com)
+{
+    "outcome" => "success",
+    "response-headers" => {"process-state" => "reload-required"}
+}
+/subsystem=mail/mail-session=jbpm/server=smtp/:add(outbound-socket-binding-ref=jbpm-mail-smtp, ssl=true, username=EMAILHERE@gmail.com, password=PASSWORDHERE@123)
+{
+    "outcome" => "success",
+    "response-headers" => {
+        "operation-requires-reload" => true,
+        "process-state" => "reload-required"
+    }
+}
+[standalone@localhost:9990 /] /system-property=org.kie.mail.session:add(value=java:/jbpmMailSession)
+{
+    "outcome" => "success",
+    "response-headers" => {"process-state" => "reload-required"}
+}
+[standalone@localhost:9990 /] :shutdown(restart=true)
+
+~~~
 
 ## RHPAM 
 
@@ -86,7 +118,7 @@ firebase deploy
 Here are some tips on firebase usage:
 
 - `firebase list` - List your available projects
-- `firebase deploy --project pizza-order-XPT0` - Deploy the new version of your script
+- `firebase deploy --project pizza-order-XPT0` - Deploy the new version of your scrip
 
 # Using it
 
